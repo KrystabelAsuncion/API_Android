@@ -27,9 +27,18 @@ Route::post('/check',[UserController::class,'authenticate']);
 //recipes
 Route::post('/create-recipe',[RecipeController::class,'storeRecipe']);
 Route::get('/all-recipe',[RecipeController::class,'index']);
-Route::get('/show/{id}',[RecipeController::class,'showRecipe']);
 Route::put('/edit-recipe/{id}',[RecipeController::class,'editRecipe']);
 Route::delete('delete/{id}',[RecipeController::class,'deleteRecipe']);
+//with views
+Route::get('/show/{id}',[RecipeController::class,'showRecipe']);
 
 //category
 Route::get('/breakfast',[RecipeController::class,'breakfastCategory']);
+Route::get('/lunch',[RecipeController::class,'lunchCategory']);
+Route::get('/dinner',[RecipeController::class,'dinnerCategory']);
+Route::get('/snacks',[RecipeController::class,'snackCategory']);
+
+//most-recent
+Route::get('/recent',[RecipeController::class,'recentRecipe']);
+// most-viewed
+Route::get('/views',[RecipeController::class,'mostViewed']);
