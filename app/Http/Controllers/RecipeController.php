@@ -90,4 +90,15 @@ class RecipeController extends Controller
 
         return response()->json(['message' => 'Recipe deleted successfully'], 200);
     }
+
+    public function breakfastCategory()
+    {
+        // Retrieve recipes with category "breakfast" from the database
+        $recipes = RecipeModel::where('category', 'breakfast')->get();
+
+        // Return the retrieved recipes as JSON response
+        return response()->json($recipes);
+    }
+
+
 }

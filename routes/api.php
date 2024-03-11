@@ -30,3 +30,6 @@ Route::get('/all-recipe',[RecipeController::class,'index']);
 Route::get('/show/{id}',[RecipeController::class,'showRecipe']);
 Route::put('/edit-recipe/{id}',[RecipeController::class,'editRecipe']);
 Route::delete('delete/{id}',[RecipeController::class,'deleteRecipe']);
+
+//category
+Route::get('/breakfast',[RecipeController::class,'breakfastCategory']);
