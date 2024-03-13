@@ -42,3 +42,6 @@ Route::get('/snacks',[RecipeController::class,'snackCategory']);
 Route::get('/recent',[RecipeController::class,'recentRecipe']);
 // most-viewed
 Route::get('/views',[RecipeController::class,'mostViewed']);
+
+//increment views
+Route::post('/recipes/{id}/increment-views', 'RecipeController@incrementViews');

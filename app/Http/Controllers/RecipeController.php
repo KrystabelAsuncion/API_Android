@@ -129,11 +129,14 @@ class RecipeController extends Controller
     public function recentRecipe()
     {
         // Retrieve the most recent recipe from the database
-        $recentRecipe = RecipeModel::latest()->take(5)->get();
-
-        return response()->json($recentRecipe, 200);
+        $recentRecipes = RecipeModel::latest()->take(5)->get();
+    
+        // Transform the collection of recipes into an array
+        $recipesArray = $recentRecipes->toArray();
+    
+        return response()->json($recipesArray, 200);
     }
-
+    
     public function mostViewed()
     {
         // Retrieve the recipe with the highest count of views
@@ -141,4 +144,17 @@ class RecipeController extends Controller
 
         return response()->json($mostViewedRecipe, 200);
     }
+    // RecipeController.php
+    public function incrementViews($id)
+    {
+        $recipe = RecipeModel::findOrFail($id);
+        $recipe->increment('views');
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Views count incremented successfully',
+            'recipe' => $recipe // Include the updated recipe details
+        ], 200);
+    }
+
 }
