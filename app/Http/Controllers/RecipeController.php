@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\RecipeModel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class RecipeController extends Controller
@@ -18,20 +19,37 @@ class RecipeController extends Controller
             'ingredients' => 'required'
         ]);
 
-       $recipe = new RecipeModel();
-       $recipe->recipe_name = $request->recipe_name;
-       $recipe->recipe_description = $request->recipe_description;
-       $recipe->category = $request->category;
-       $recipe->steps = $request->steps;
-       $recipe->ingredients = $request->ingredients;
-       $recipe->save();
+        // Check if user is authenticated
+        if (Auth::check()) {
+            // Get the authenticated user's ID
+            $user_id = Auth::user()->id;
 
-       return response()->json([
-        'status' => 'success',
-        'message' => 'created successfully',
-        'data' => $recipe
-       ]);
+            $recipe = new RecipeModel();
+            $recipe->recipe_name = $request->recipe_name;
+            $recipe->recipe_description = $request->recipe_description;
+            $recipe->category = $request->category;
+            $recipe->steps = $request->steps;
+            $recipe->ingredients = $request->ingredients;
+
+            // Associate the recipe with the user's ID
+            $recipe->user_id = $user_id;
+
+            $recipe->save();
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'created successfully',
+                'data' => $recipe
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'User is not authenticated'
+            ], 401);
+        }
     }
+
+
     public function index()
     {
         $recipes = RecipeModel::all();
@@ -130,13 +148,13 @@ class RecipeController extends Controller
     {
         // Retrieve the most recent recipe from the database
         $recentRecipes = RecipeModel::latest()->take(5)->get();
-    
+
         // Transform the collection of recipes into an array
         $recipesArray = $recentRecipes->toArray();
-    
+
         return response()->json($recipesArray, 200);
     }
-    
+
     public function mostViewed()
     {
         // Retrieve the recipe with the highest count of views

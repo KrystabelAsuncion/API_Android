@@ -12,14 +12,24 @@ class UserController extends Controller
     {
         $validatedData = $request->validate([
             'username' => 'required',
-            'email' => 'required',
+            'email' => 'required|email|unique:users',
             'password' => 'required',
         ]);
-        $user = User::create($validatedData);
+
+        // Create a new user
+        $user = User::create([
+            'username' => $validatedData['username'],
+            'email' => $validatedData['email'],
+            'password' => bcrypt($validatedData['password']),
+        ]);
+
+        // Generate access token for the newly registered user
+        $accessToken = $user->createToken('PinoySpecials')->accessToken;
 
         return response()->json([
             'status' => 'success',
-            'data' => $user
+            'data' => $user,
+            'access_token' => $accessToken,
         ]);
     }
 
@@ -32,7 +42,7 @@ class UserController extends Controller
         ]);
     }
 
-    public function authenticate(Request $request)
+    public function login(Request $request)
     {
         $credentials = $request->validate([
             'username' => 'required',
@@ -41,10 +51,11 @@ class UserController extends Controller
 
         if (Auth::attempt($credentials)) {
             $user = Auth::user();
+            $token = $user->createToken('PinoySpecials')->accessToken; // Generate token
             return response()->json([
                 'status' => true,
                 'message' => 'user found',
-                'data' => $user
+                'access_token' => $token, // Send token in the response
             ]);
         } else {
             return response()->json([

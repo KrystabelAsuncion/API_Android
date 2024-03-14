@@ -22,7 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //user authentication
 Route::post('/create',[UserController::class,'store']);
 Route::get('/all',[UserController::class,'all']);
-Route::post('/check',[UserController::class,'authenticate']);
+Route::post('/login',[UserController::class,'login']);
 
 //recipes
 Route::post('/create-recipe',[RecipeController::class,'storeRecipe']);
@@ -44,4 +44,4 @@ Route::get('/recent',[RecipeController::class,'recentRecipe']);
 Route::get('/views',[RecipeController::class,'mostViewed']);
 
 //increment views
-Route::post('/recipes/{id}/increment-views', 'RecipeController@incrementViews');
+Route::post('/recipes/{id}/increment-views', [RecipeController::class,'incrementViews']);
